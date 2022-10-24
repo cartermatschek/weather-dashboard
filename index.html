@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="./assets/style.css" />
     <title>Weather Dashboard</title>
+
 </head>
 <body>
     <header class="container-fluid text-center text-white bg-primary bg-gradient p-1">
@@ -16,8 +17,10 @@
     </header>
 
     <div class="container-fluid">
+        <!-- Search container -->
         <div class="row">
-            <div class="col-lg-3">
+        <aside class="col-lg-3">
+            <div>
                 <h4 class="mt-1">Search for a City:</h4>
                 <div class="input-group mb-3">
                     <input id="enter-city" type="text" class="form-control" placeholder="Enter a city" aria-label="Enter a city">
@@ -26,36 +29,35 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            <!-- History form to populate previous searches -->
+            <form id="history"></form>    
+            </aside>
+
+            <!-- Today's Weather container -->
             <div class="col-lg-9">
                 <div class="row mr-0">
                     <!-- add "d-none" below -->
-                    <div class="col-lg-11 card m-3" id="today-weather"> 
-                        <div class="card-body">
-                            <h3 id="city-name" class="city-name align-middle">city</h3>
-                            <img id="current-pic" alt="">
-                            <p id="temperature">temp</p>
-                            <p id="humidity">hum</p>
-                            <p id="wind-speed">wind</p>
-                            <p id="UV-index">uv</p>
+                    <div class="col-lg-11 card m-3"> 
+                        <div class="card-body" id="today-weather">
                         </div>
                     </div>
-                </div>
-                <!-- add "d-none" below -->
-                <div class="row" id="fiveday-header">
-                    <div class="col-12">
-                        <h3>5-Day Forecast</h3>
+                    <div class="row" id="fiveday-header">
+                        <div class="col-12">
+                            <h3>5-Day Forecast</h3>
+                        </div>
+                    </div>
+                    <div class="row" id="forecast">
+                        
+                        <!-- <div class="col-md-2 forecast bg-primary text-white m-2 rounded">5</div> -->
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded">1</div>
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded">2</div>
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded">3</div>
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded">4</div>
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded">5</div>
-                </div>
+
+                <!-- Five Day Weather container -->
+                <!-- add "d-none" below -->
+                
             </div>
         </div>
+    </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
