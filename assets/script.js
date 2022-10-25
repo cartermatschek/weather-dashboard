@@ -10,16 +10,18 @@ var fivedayEl = document.getElementById("fiveday-header");
 var todayweatherEl = document.getElementById("today-weather");
 
 var APIkey = "5238afc3f846ceadbc3c137f84bf5d39"
-// var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
 
 searchEl.addEventListener("click", function () {
     console.log(cityEl.value);
-    // plug in geocode api call using city value as the query string
     geocodeCall(cityEl.value)
 })
 
 function geocodeCall(cityValue) {
     var queryURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityValue}&limit=5&appid=${APIkey}`
+
+    fivedayEl.classList.remove("d-none");
+    todayweatherEl.classList.remove("d-none");
+    document.createElement("h2").textContent = cityEl.value
 
     fetch(queryURL)
         .then(response=> response.json())
@@ -38,20 +40,28 @@ function currentWeatherCall(lat, lon) {
         .then(data=> {
             console.log(data);
 
+            // var name = document.createElement("h2")
+            //     name.textContent = data[0].name
             var temp = document.createElement("h3")
-                temp.setAttribute("class", "current styling")
-                temp.textContent = "temp: " + data.current.temp + " degrees F"
+                temp.setAttribute("class", "current-styling")
+                temp.textContent = "Temp: " + data.current.temp + " degrees F"
+            var icon = document.createElement("img") 
+                icon.setAttribute("class", "icon-styling")   
+                icon.src = "http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png"
             var humidity = document.createElement("h3")
-                humidity.textContent = "humidity: " + data.current.humidity + "%"
+                humidity.setAttribute("class", "current-styling")
+                humidity.textContent = "Humidity: " + data.current.humidity + "%"
             var wind = document.createElement("h3")
-                wind.textContent = "wind: " + data.current.wind_speed + " mph"
+                wind.setAttribute("class", "current-styling")
+                wind.textContent = "Wind: " + data.current.wind_speed + " mph"
             var date = document.createElement("h3")
+                date.setAttribute("class", "current-styling")
                 date.textContent = moment.unix(data.current.dt).format("MM/DD/YY")
 
 
 
 
-            document.getElementById("today-weather").append(date, temp, humidity, wind);
+            document.getElementById("today-weather").append(date, icon, temp, humidity, wind);
         });
 }
 
@@ -69,15 +79,16 @@ function forecastCall(lat, lon) {
                     forecastCard.setAttribute("class", "card")
                     var temp = document.createElement("h4")
                         temp.setAttribute("class", "forecast-style")
-                        temp.textContent = "temp: " + data.daily[i].temp.day + " degrees F"
+                        temp.textContent = "Temp: " + data.daily[i].temp.day + " degrees F"
                     var icon = document.createElement("img")    
-                        icon.textContent = data.daily[i].weather.icon
+                        icon.setAttribute("class", "icon-styling")
+                        icon.src = "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png"
                     var humidity = document.createElement("h4")
                         humidity.setAttribute("class", "forecast-style")
-                        humidity.textContent = "humidity: " + data.daily[i].humidity + "%"
+                        humidity.textContent = "Humidity: " + data.daily[i].humidity + "%"
                     var wind = document.createElement("h4")
                         wind.setAttribute("class", "forecast-style")
-                        wind.textContent = "wind: " + data.daily[i].wind_speed + " mph"
+                        wind.textContent = "Wind: " + data.daily[i].wind_speed + " mph"
 
 
 
@@ -86,7 +97,7 @@ function forecastCall(lat, lon) {
 
 
 
-                forecastCard.append(temp, humidity, wind)
+                forecastCard.append(temp, icon, humidity, wind)
              document.getElementById("forecast").append(forecastCard)   
             }
         });
