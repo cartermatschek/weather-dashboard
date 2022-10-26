@@ -6,22 +6,51 @@ var currentTempEl = document.getElementById("temperature");
 var currentHumidityEl = document.getElementById("humidity");
 var currentWindEl = document.getElementById("wind-speed");
 var historyEl = document.getElementById("history");
-var fivedayEl = document.getElementById("fiveday-header");
-var todayweatherEl = document.getElementById("today-weather");
-
+var fiveDayEl = document.getElementById("fiveday-header");
+var todayWeatherEl = document.getElementById("today-weather");
+var weatherContainer = document.getElementById("weather")
+var forecastEl = document.getElementById("forecast")
 var APIkey = "5238afc3f846ceadbc3c137f84bf5d39"
+
+function loadHistory() { //make this run on document.ready
+    // load the search history from local storage
+    if (window.localStorage.getItem('searches')) {
+        var previousSearches = JSON.parse(window.localStorage.getItem('searches'))
+    } else {
+        var previousSearches = [];
+    }
+
+    // populate buttons for each previous search
+    previousSearches.forEach(function (search) {
+        // create a button
+        // set a listener to call geocodeCall(search)
+        //append to #history
+    })
+}
 
 searchEl.addEventListener("click", function () {
     console.log(cityEl.value);
+    todayWeatherEl.textContent = ""
     geocodeCall(cityEl.value)
+    if (window.localStorage.getItem('searches')) {
+        var previousSearches = JSON.parse(window.localStorage.getItem('searches'))
+    } else {
+        var previousSearches = [];
+    }
+    previousSearches.push(cityEl.value);
+    window.localStorage.setItem('searches', JSON.stringify(previousSearches))
 })
 
 function geocodeCall(cityValue) {
     var queryURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityValue}&limit=5&appid=${APIkey}`
 
-    fivedayEl.classList.remove("d-none");
-    todayweatherEl.classList.remove("d-none");
-    document.createElement("h2").textContent = cityEl.value
+    fiveDayEl.classList.remove("d-none");
+    todayWeatherEl.classList.remove("d-none");
+
+    var citySearch = cityEl.value
+    var cityh2 = document.createElement("h2")
+    cityh2.textContent = citySearch
+    todayWeatherEl.append(citySearch)
 
     fetch(queryURL)
         .then(response=> response.json())
@@ -40,11 +69,9 @@ function currentWeatherCall(lat, lon) {
         .then(data=> {
             console.log(data);
 
-            // var name = document.createElement("h2")
-            //     name.textContent = data[0].name
             var temp = document.createElement("h3")
                 temp.setAttribute("class", "current-styling")
-                temp.textContent = "Temp: " + data.current.temp + " degrees F"
+                temp.textContent = "Temp: " + data.current.temp + "\u00B0 F"
             var icon = document.createElement("img") 
                 icon.setAttribute("class", "icon-styling")   
                 icon.src = "http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png"
@@ -72,14 +99,14 @@ function forecastCall(lat, lon) {
         .then(response=> response.json())
         .then(data=> {
             console.log(data.daily[0]);
-
+        forecastEl.textContent = ""
             for(var i=0; i < data.daily.length - 3; i++){
                 console.log(data.daily[i]);
                 var forecastCard = document.createElement("div")
                     forecastCard.setAttribute("class", "card")
                     var temp = document.createElement("h4")
                         temp.setAttribute("class", "forecast-style")
-                        temp.textContent = "Temp: " + data.daily[i].temp.day + " degrees F"
+                        temp.textContent = "Temp: " + data.daily[i].temp.day + "\u00B0 F"
                     var icon = document.createElement("img")    
                         icon.setAttribute("class", "icon-styling")
                         icon.src = "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png"
@@ -98,16 +125,17 @@ function forecastCall(lat, lon) {
 
 
                 forecastCard.append(temp, icon, humidity, wind)
-             document.getElementById("forecast").append(forecastCard)   
+             forecastEl.append(forecastCard)   
             }
         });
 }
-
-// Icons according to weather
 
 // Dynamically add the searched city to search history
 // Display the searched item again when clicked on
 
 
 
+document.addEventListener('DOMContentLoaded', function () {
+    loadHistory();
+}, false);
 
