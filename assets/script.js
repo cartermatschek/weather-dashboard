@@ -25,12 +25,27 @@ function loadHistory() { //make this run on document.ready
         // create a button
         // set a listener to call geocodeCall(search)
         //append to #history
+        historyBtn(search)
     })
+}
+
+function historyBtn(value) {
+    var BtnClick = document.createElement("button")
+    BtnClick.textContent = value
+    BtnClick.setAttribute("class", "btn btn-style")
+    BtnClick.addEventListener("click", function () {
+        todayWeatherEl.textContent = ""
+        var cityH2 = document.createElement("h2")
+        cityH2.textContent = value
+        todayWeatherEl.append(cityH2)
+        geocodeCall(value)
+    })
+    document.querySelector("#history").append(BtnClick)
 }
 
 searchEl.addEventListener("click", function () {
     console.log(cityEl.value);
-    todayWeatherEl.textContent = ""
+    historyBtn(cityEl.value)
     geocodeCall(cityEl.value)
     if (window.localStorage.getItem('searches')) {
         var previousSearches = JSON.parse(window.localStorage.getItem('searches'))
@@ -43,19 +58,18 @@ searchEl.addEventListener("click", function () {
 
 function geocodeCall(cityValue) {
     var queryURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityValue}&limit=5&appid=${APIkey}`
-
+    todayWeatherEl.innerHTML = ""
     fiveDayEl.classList.remove("d-none");
     todayWeatherEl.classList.remove("d-none");
-
-    var citySearch = cityEl.value
-    var cityh2 = document.createElement("h2")
-    cityh2.textContent = citySearch
-    todayWeatherEl.append(citySearch)
 
     fetch(queryURL)
         .then(response=> response.json())
         .then(data=> {
             console.log(data);
+            var citySearch = data[0].name
+            var cityH2 = document.createElement("h2")
+            cityH2.textContent = citySearch
+            todayWeatherEl.append(cityH2)
             currentWeatherCall(data[0].lat, data[0].lon)
             forecastCall(data[0].lat, data[0].lon)
         });
@@ -85,9 +99,6 @@ function currentWeatherCall(lat, lon) {
                 date.setAttribute("class", "current-styling")
                 date.textContent = moment.unix(data.current.dt).format("MM/DD/YY")
 
-
-
-
             document.getElementById("today-weather").append(date, icon, temp, humidity, wind);
         });
 }
@@ -103,7 +114,7 @@ function forecastCall(lat, lon) {
             for(var i=0; i < data.daily.length - 3; i++){
                 console.log(data.daily[i]);
                 var forecastCard = document.createElement("div")
-                    forecastCard.setAttribute("class", "card")
+                    forecastCard.setAttribute("class", "card card-style")
                     var temp = document.createElement("h4")
                         temp.setAttribute("class", "forecast-style")
                         temp.textContent = "Temp: " + data.daily[i].temp.day + "\u00B0 F"
@@ -117,23 +128,11 @@ function forecastCall(lat, lon) {
                         wind.setAttribute("class", "forecast-style")
                         wind.textContent = "Wind: " + data.daily[i].wind_speed + " mph"
 
-
-
-
-
-
-
-
                 forecastCard.append(temp, icon, humidity, wind)
              forecastEl.append(forecastCard)   
             }
         });
 }
-
-// Dynamically add the searched city to search history
-// Display the searched item again when clicked on
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
     loadHistory();

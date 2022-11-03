@@ -1,5 +1,5 @@
 .current-styling{
-
+ 
 }
 
 .forecast-style{
@@ -10,4 +10,13 @@
 
 .icon-styling{
     width: 100px;
+}
+
+.card-style{
+    margin: 10px;
+}
+
+#history{
+    display: flex;
+    flex-direction: column;
 }
